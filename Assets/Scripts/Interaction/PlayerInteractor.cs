@@ -1,49 +1,64 @@
 using UnityEngine;
+using HollowSaint.Core;
+using HollowSaint.Player;
 
 namespace HollowSaint.Interaction
 {
+    /// <summary>
+    /// Finds the closest Interactable within reach and calls it when E is pressed.
+    /// </summary>
     public class PlayerInteractor : MonoBehaviour
     {
-        [SerializeField] private float interactRadius = 1f;
-        [SerializeField] private LayerMask interactableLayer;
+        [SerializeField] float reach = 1.2f;
 
-        private Interactable nearest;
+        readonly Collider2D[] hits = new Collider2D[16];
+        ContactFilter2D filter;
 
-        private void Update()
+        /// <summary>The interactor in the current scene (for the HUD prompt).</summary>
+        public static PlayerInteractor Active { get; private set; }
+
+        public Interactable Current { get; private set; }
+
+        void Awake()
         {
-            nearest = FindNearestInteractable();
-
-            if (nearest != null && Input.GetKeyDown(KeyCode.E))
-            {
-                nearest.TriggerInteract();
-            }
+            filter = new ContactFilter2D();
+            filter.NoFilter(); // includes triggers
         }
 
-        private Interactable FindNearestInteractable()
+        void OnEnable() => Active = this;
+
+        void OnDisable()
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRadius, interactableLayer);
-            Interactable closest = null;
-            float closestDist = float.MaxValue;
-
-            foreach (var hit in hits)
-            {
-                var interactable = hit.GetComponent<Interactable>();
-                if (interactable == null) continue;
-
-                float dist = Vector2.Distance(transform.position, hit.transform.position);
-                if (dist < closestDist)
-                {
-                    closestDist = dist;
-                    closest = interactable;
-                }
-            }
-            return closest;
+            if (Active == this) Active = null;
         }
 
-        private void OnDrawGizmosSelected()
+        void Update()
+        {
+            bool allowed = Game.Instance == null || Game.Instance.GameplayInputAllowed;
+            Current = allowed ? FindClosest() : null;
+            if (Current != null && InputReader.InteractPressedThisFrame())
+                Current.Interact(gameObject);
+        }
+
+        Interactable FindClosest()
+        {
+            int count = Physics2D.OverlapCircle(transform.position, reach, filter, hits);
+            Interactable best = null;
+            float bestDistance = float.MaxValue;
+            for (int i = 0; i < count; i++)
+            {
+                if (!hits[i].enabled || !hits[i].TryGetComponent(out Interactable candidate)) continue;
+                if (!candidate.isActiveAndEnabled || !candidate.CanInteract) continue;
+                float d = ((Vector2)hits[i].ClosestPoint(transform.position) - (Vector2)transform.position).sqrMagnitude;
+                if (d < bestDistance) { bestDistance = d; best = candidate; }
+            }
+            return best;
+        }
+
+        void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, interactRadius);
+            Gizmos.DrawWireSphere(transform.position, reach);
         }
     }
 }

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7beb1c629797f468caab09a7c505a4, type: 3}
+  m_Name: Case_TheMirrorBorn
+  m_EditorClassIdentifier: 
+  id: the_mirror_born
+  title: Room 414
+  sceneName: Hotel
+  entity: {fileID: 11400000, guid: af17dad894437724c97c7d0a33d11ba6, type: 2}
+  clues:
+  - {fileID: 11400000, guid: 850148cdf23ebc1478fc9a7cafd88039, type: 2}
+  - {fileID: 11400000, guid: ee453c49f6eb8d74886c302ec3b91950, type: 2}
+  - {fileID: 11400000, guid: 5e931e82617b179498e7167e20fbe0ce, type: 2}
+  isFinal: 1
+  edition: "Baku  \xB7  Late edition  \xB7  Vol. XII, No. 2??"
+  flavorHeadlines:
+  - Flight 214 Still Grounded; Airline Declines Comment
+  - Airport Delays Enter Third Week
+  - Clear Skies Forecast All Week
+  leadHeadline: 'Hotel Caspian Rest: Guest in Room 414 Has Not Left in Weeks. Staff
+    "Concerned"'
+  leadDetail: Light under the door every night, 3 AM, Hotel Caspian Rest.
+  leadReaction:
+  - speaker: Dutch
+    text: Room 414.
+  - speaker: Dutch
+    text: ...That's my room.
+  arrivalLines:
+  - speaker: Radio
+    text: ...Caspian Air regrets to announce that flight 214 to New York is delayed.
+      Passengers are asked to remain at their hotels. We will update you at three
+      a.m.
+  - speaker: Dutch
+    text: Same announcement. Word for word.
+  - speaker: Dutch
+    text: Fine. Work it like any other scene.
+  bookRevealLines:
+  - speaker: Dutch
+    text: There's a page at the back. I didn't write a new page.
+  - speaker: Dutch
+    text: ...It's my hand. I didn't write it.
+  identifyLines:
+  - speaker: Dutch
+    text: Six signs. Every one of them checked.
+  - speaker: Dutch
+    text: Every one of them mine.
+  - speaker: Dutch
+    text: The fix says every tool in the bag. Fine. The mirror's where this room
+      feels wrong.
+  wrongToolLine: Nothing.
+  resolveLines: []

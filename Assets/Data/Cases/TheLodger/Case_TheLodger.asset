@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7beb1c629797f468caab09a7c505a4, type: 3}
+  m_Name: Case_TheLodger
+  m_EditorClassIdentifier: 
+  id: the_lodger
+  title: The Lodger
+  sceneName: Case_Lodger
+  entity: {fileID: 11400000, guid: 7158d2ec6b38cb14e83c4a15df35c67d, type: 2}
+  clues:
+  - {fileID: 11400000, guid: e16a08d801437dc40a61578abad86c74, type: 2}
+  - {fileID: 11400000, guid: 8b05b7f413d2b544f9d59bf662c68bcc, type: 2}
+  - {fileID: 11400000, guid: 40545d1ec1090d744948e2df590ac92a, type: 2}
+  isFinal: 0
+  edition: "Baku  \xB7  Sunday edition  \xB7  Vol. XII, No. 206"
+  flavorHeadlines:
+  - Hotel Occupancy Hits Record High
+  - Airport Delays Continue Into Second Week
+  - Lost Luggage Auction Draws Crowds
+  leadHeadline: 'Caravanserai Inn: Room 9 Guest "Never Checked Out". Staff Report
+    Warm Room, Untouched Bed'
+  leadDetail: Light under the door reported at 3 AM, Old City.
+  leadReaction:
+  - speaker: Dutch
+    text: A guest who never checks out. Funny thing to read in a hotel room.
+  arrivalLines:
+  - speaker: Dutch
+    text: Caravanserai Inn, room nine. Warm in here. Lived-in, without the living.
+  bookRevealLines: []
+  identifyLines:
+  - speaker: Dutch
+    text: The Lodger. Takes a room, keeps it, forgets it was ever going anywhere.
+  - speaker: Dutch
+    text: ...The fix isn't written. The ink just stops.
+  - speaker: Dutch
+    text: Fine. It signs the register under a name that isn't its own. Strike the
+      name, with the pen it signed with.
+  wrongToolLine: I try the {0}. Down the hall a key turns in a lock. It's not going
+    anywhere.
+  resolveLines:
+  - speaker: Dutch
+    text: One line through the name, in its own ink.
+  - speaker: 
+    text: The ink runs. The room cools. Somewhere a clock starts ticking again.
+  - speaker: Dutch
+    text: Checkout's at noon, friend.

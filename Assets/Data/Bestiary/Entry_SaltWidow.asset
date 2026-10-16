@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_SaltWidow
+  m_EditorClassIdentifier: 
+  id: salt_widow
+  displayName: The Salt Widow
+  classification: Drowned revenant
+  lore: Walks up out of the harbour on the anniversary of the drowning, looking for
+    the house she left. Harmless if you don't answer the door.
+  symptoms:
+  - wet footprints
+  - cold rot smell
+  - weeping at low tide
+  weaknessText: Return her wedding ring to the water at the hour she went in.
+  weaknessTool: {fileID: 0}
+  handwritten: 0
+  hiddenUntilItsCase: 0

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_LanternSaint
+  m_EditorClassIdentifier: 
+  id: lantern_saint
+  displayName: The Lantern Saint
+  classification: Relic-spirit
+  lore: A votive flame that outlived its church. Draws moths, stops clocks and leaves
+    wax on the sills of people who pray too late at night.
+  symptoms:
+  - flickering electronics
+  - moths in sealed rooms
+  - stopped clocks
+  weaknessText: Snuff the votive with bare fingers. No glove, no breath.
+  weaknessTool: {fileID: 0}
+  handwritten: 0
+  hiddenUntilItsCase: 0

@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f33218bd2f6d0654aade593b312b84d2, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  hotelScene: Hotel
+  cases:
+  - {fileID: 11400000, guid: 37ef42319ab8e264096b162d37c37744, type: 2}
+  - {fileID: 11400000, guid: d1bdbd0b8e847104188dac32cfc6a174, type: 2}
+  - {fileID: 11400000, guid: fccd9d5b2de840f42a7d4e92f50c6f4b, type: 2}
+  - {fileID: 11400000, guid: fe374309c3da377409b8bd3921466af6, type: 2}
+  bestiary:
+  - {fileID: 11400000, guid: 2d17d4cb6786d534daf0379888b426fb, type: 2}
+  - {fileID: 11400000, guid: 8ffa6d43f4b5efa41b23076947f2f964, type: 2}
+  - {fileID: 11400000, guid: cd867456e2e426b4d88ef104e1f4909f, type: 2}
+  - {fileID: 11400000, guid: fee3cfc91b903f2429db3ba2363f0c76, type: 2}
+  - {fileID: 11400000, guid: 7158d2ec6b38cb14e83c4a15df35c67d, type: 2}
+  - {fileID: 11400000, guid: af17dad894437724c97c7d0a33d11ba6, type: 2}
+  startingTools:
+  - {fileID: 11400000, guid: eebbed965cadb18488461eeda39c1109, type: 2}
+  - {fileID: 11400000, guid: 7d3fcc2be663f1840a854a16e1931983, type: 2}
+  - {fileID: 11400000, guid: 563df2e48a3968649af05398a9668d06, type: 2}
+  - {fileID: 11400000, guid: b6a89d05e624453468952c25d5e9bc8a, type: 2}
+  radioLine:
+    speaker: Radio
+    text: ...Caspian Air regrets to announce that flight 214 to New York is delayed.
+      Passengers are asked to remain at their hotels. We will update you at three
+      a.m.
+  radioReactions:
+  - Delayed again. Watch says 3:12. Watch has said 3:12 since Tuesday. Might as well
+    read the paper.
+  - Same announcement. They must have it on a loop.
+  - ...Same words. Same pause before "three a.m."
+  - ...
+  mirrorLines:
+  - Hat brim down. Three days of stubble under there, probably. Don't need to check.
+  - Mirror's cold. Cheap hotel.
+  - Still haven't slept. Face doesn't look tired. Can't really see the face.
+  - Don't feel like looking right now.
+  endingLines:
+  - speaker: 
+    text: Dutch looks.
+  - speaker: 
+    text: The man in the glass is wearing his coat and his hat, lit the wrong colour.
+  - speaker: Reflection
+    text: Took you long enough.
+  - speaker: Dutch
+    text: You're the new entry.
+  - speaker: Reflection
+    text: Oldest one in the Book. You just never turned to the back.
+  - speaker: Dutch
+    text: How long have I been in this room?
+  - speaker: Reflection
+    text: Ask the radio.
+  - speaker: Radio
+    text: ...Caspian Air flight 214 to New York is now boarding. All passengers,
+      please proceed to the gate.
+  - speaker: Dutch
+    text: ...Huh. On time.
+  endTitle: HOLLOW SAINT
+  endSubtitle: 'Flight 214 to New York departed on schedule.
+
+    Room 414 was found
+    empty, the bed made, the mirror cold.'
+  newspaperName: THE CASPIAN COURIER
+  uiFont: {fileID: 0}
+  osFontNames:
+  - Georgia
+  - Palatino Linotype
+  - Times New Roman

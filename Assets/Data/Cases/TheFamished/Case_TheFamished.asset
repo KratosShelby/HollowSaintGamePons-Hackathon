@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7beb1c629797f468caab09a7c505a4, type: 3}
+  m_Name: Case_TheFamished
+  m_EditorClassIdentifier: 
+  id: the_famished
+  title: The Famished
+  sceneName: Case_Famished
+  entity: {fileID: 11400000, guid: 2d17d4cb6786d534daf0379888b426fb, type: 2}
+  clues:
+  - {fileID: 11400000, guid: e017220c8eb839946a7df34111213724, type: 2}
+  - {fileID: 11400000, guid: 1613709a06ea1ce40aa2d8f5fa6c1f79, type: 2}
+  - {fileID: 11400000, guid: 2d16899349a7849478fb484637bb4da3, type: 2}
+  isFinal: 0
+  edition: "Baku  \xB7  Tuesday edition  \xB7  Vol. XII, No. 201"
+  flavorHeadlines:
+  - Caspian Fishery Quotas Under Review Again
+  - Old City Tram Line to Reopen "Next Spring", Says Ministry
+  - Heatwave Expected to Break by Friday
+  leadHeadline: Night Staff Flee Shuttered Diner. "Scratching" Heard From Locked
+    Pantry
+  leadDetail: Reported near 2 AM, Harbor Street Diner, Harbor Street.
+  leadReaction:
+  - speaker: Dutch
+    text: Harbor Street. Walking distance. Beats staring at the ceiling.
+  arrivalLines:
+  - speaker: Dutch
+    text: Harbor Street Diner. Shut a month, smells like a year.
+  - speaker: Dutch
+    text: Look around before anything looks at me. The Book's in my coat if I need
+      it.
+  bookRevealLines: []
+  identifyLines:
+  - speaker: Dutch
+    text: The Famished. A cook who starved in his own kitchen and came back hungry.
+  - speaker: Dutch
+    text: Rock salt from the kitchen where it died. The pantry, then.
+  wrongToolLine: I try the {0}. The scratching behind the door gets louder. Wrong
+    tool.
+  resolveLines:
+  - speaker: Dutch
+    text: A line of the kitchen's own rock salt across the threshold.
+  - speaker: 
+    text: Something behind the pantry door breathes out, long and tired, and the
+      cold goes with it.
+  - speaker: Dutch
+    text: Eat well, chef.

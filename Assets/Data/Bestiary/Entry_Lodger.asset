@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_Lodger
+  m_EditorClassIdentifier: 
+  id: lodger
+  displayName: The Lodger
+  classification: Caravanserai Inn, Room 9
+  lore: "Signs: clocks stopped at the same minute, all of them, like the room agreed
+    on a time and quit. Ashtrays that fill overnight with nobody smoking. A bed made
+    every morning that nobody's slept in \u2014 made better than housekeeping makes
+    it, like someone's still proud of the work."
+  symptoms:
+  - stopped clocks
+  - cigarette burns, no smoker
+  - an unslept bed
+  weaknessText: "Fix: <i>(unfinished \u2014 the ink stops here)</i>\n<i>My watch
+    stopped at 3:12 four nights running. I told myself it was the battery. I didn't
+    check the battery.</i>"
+  weaknessTool: {fileID: 11400000, guid: 1858db92150cf534b9a59b36db266bbc, type: 2}
+  handwritten: 0
+  hiddenUntilItsCase: 0

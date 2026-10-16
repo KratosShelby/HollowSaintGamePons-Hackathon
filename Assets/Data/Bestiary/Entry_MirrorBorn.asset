@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_MirrorBorn
+  m_EditorClassIdentifier: 
+  id: mirror_born
+  displayName: '[untitled]'
+  classification: Room 414
+  lore: "This page was already written when I opened to it. Not my handwriting \u2014
+    my hand, moving the way it moves, but I didn't write this. Five of the six signs
+    are already checked. I didn't check them. They checked themselves, one case at
+    a time, every night I told myself it was nothing: a watch stuck at 3:12, an ashtray
+    I don't remember filling, a bed I don't remember not sleeping in."
+  symptoms:
+  - repeated whispers
+  - cold spots near mirrors
+  - stopped clocks
+  - cigarette burns, no smoker
+  - an unslept bed
+  - a flight that never leaves
+  weaknessText: "Fix: Every tool in the bag. Tried them all, in order, out of habit
+    more than hope. Each one fails for its own reason \u2014 not because the page
+    is wrong. Because I'm reading it wrong. Because I keep looking at the room for
+    the thing that's supposed to be in it.\nThe sixth line, when everything else
+    is crossed out, is one word: <b>Look.</b>"
+  weaknessTool: {fileID: 0}
+  handwritten: 1
+  hiddenUntilItsCase: 1

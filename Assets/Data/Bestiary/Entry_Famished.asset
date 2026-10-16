@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_Famished
+  m_EditorClassIdentifier: 
+  id: famished
+  displayName: The Famished
+  classification: Harbor Street Diner, kitchen
+  lore: "Signs: cold rot under the cold-storage smell. Lights that won't hold steady
+    \u2014 it pulls power like it pulls everything else, more than it needs, like
+    it forgot how to stop. Claw marks on the inside of the pantry door. Inside. Something
+    that wants in claws at the outside. Something that already got what it wanted
+    claws to get out \u2014 and didn't make it."
+  symptoms:
+  - cold rot smell
+  - flickering electronics
+  - claw marks on the inside of doors
+  weaknessText: "Fix: A line of rock salt. Has to be from that kitchen specifically
+    \u2014 whatever was in the shaker the night it died hungry. Store-bought doesn't
+    hold. I don't know why. I've stopped asking why about half of what's in this
+    book.\n<i>Don't ask the owner before you take the salt. Just don't.</i>"
+  weaknessTool: {fileID: 11400000, guid: 34a648778194b124fa08058b5ba4b5e2, type: 2}
+  handwritten: 0
+  hiddenUntilItsCase: 0

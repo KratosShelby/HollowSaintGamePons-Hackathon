@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e64bfadee9828b4c9b19f2727310c5f, type: 3}
+  m_Name: Tool_TableSalt
+  m_EditorClassIdentifier: 
+  id: table_salt
+  displayName: Table salt
+  description: A paper twist of diner salt. Better than nothing, usually.
+  icon: {fileID: 0}
+  mirrorBornLine: A salt line around what? The bed? The chair? Me?

@@ -38,3 +38,7 @@ Thumbs.db
 
 # Piskel autosave noise (keep exported PNGs, not editor backups)
 *.piskel
+
+# Editor/IDE files not covered above
+*.slnx
+.vscode/

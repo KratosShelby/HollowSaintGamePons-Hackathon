@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271b0a95595871d4f81bafb065627511, type: 3}
+  m_Name: Entry_Echo
+  m_EditorClassIdentifier: 
+  id: echo
+  displayName: The Echo
+  classification: Lantern Lane, third-floor flat
+  lore: "Signs: whispers that repeat the same four words, never more. Things moved
+    an inch from where they were left \u2014 never thrown, never broken, just wrong,
+    like someone tidied a room they used to live in. Cold spots that gather near
+    glass. Mirrors, windows, a picture frame. Anything that used to hold a reflection
+    it recognized."
+  symptoms:
+  - repeated whispers
+  - objects slightly moved
+  - cold spots near mirrors
+  weaknessText: "Fix: Give it back what's its. A spoon from its own set \u2014 not
+    silver in general, not a replacement, its spoon, the one still in a drawer somewhere
+    in that flat. It's not angry. It's confused. Confused is worse. Angry wants to
+    hurt you. Confused just wants you to stay until it figures out why you're not
+    who it's waiting for."
+  weaknessTool: {fileID: 11400000, guid: 60359157c0e3aa44580ac0e35221518d, type: 2}
+  handwritten: 0
+  hiddenUntilItsCase: 0
