@@ -1,24 +1,19 @@
-# Addendum — cafe + drivable map (STRETCH GOAL, explicitly optional)
+Addendum — walkable street + player-driven car (stretch goal, read the build order at the bottom before starting)
 
-Read this as a stretch addition, not a requirement. The current build (hotel → instant scene transition → case scene) is a complete, shippable submission on its own. Everything below only adds to that if there's time — if it's not done by a sensible cutoff, ship without it. Nothing here should put the working core loop at risk.
+This replaces the earlier cafe/map note — same goal, now with real player control instead of an auto-drive animation. Still a stretch addition: the current build (hotel → instant scene transition → case scene) is a complete, shippable submission on its own. Build this in the order below so it degrades gracefully — if time runs out partway, whatever step you've reached is still fine to ship with.
 
-## The flow being added
+## The flow
 
-1. **Hotel room** (unchanged) — wake, mirror.
-2. **Cafe** (new, small scene) — Dutch gets a drink, sits down, reads the newspaper here instead of in the hotel room. Same newspaper-hub interaction already built, just relocated. Small room, one light source (hanging bulb), 1-2 static background silhouettes for atmosphere — no new systems, this part is cheap.
-3. **Map screen** (new) — after picking the real lead, cut to a small fixed city map. Only that day's destination is marked/interactable. A car icon travels from the cafe to the marked location.
-4. **Case scene** (unchanged) — arrival transitions in exactly as now.
+1. **Hotel room** (unchanged) — wake, mirror. The door is now a real exit, not flavor.
+2. **The street** (new scene) — walking through the hotel door loads this. Same top-down movement/interact system you've already built, just a bigger outdoor scene — this part is low-risk, it's the same controller on new art. Contains: the hotel's exterior door (walk back in), the cafe's door, and Dutch's car (parked, interactable, like any other object).
+3. **Cafe** (new scene) — walking through its door loads it. Dutch gets a drink, reads the newspaper here — same newspaper-hub interaction already built, just relocated. One light source (hanging bulb), 1-2 static background silhouettes for atmosphere. Leaving puts him back on the street.
+4. **The car** — interacting with it (same Interactable system as everything else) starts a short **player-controlled driving segment**: simple top-down car movement, accelerate/steer, along a single fixed road to that day's destination. No traffic, no open city to explore — one short linear road per trip, reused/reskinned per case if needed. Reaching the end transitions into the case scene exactly like a normal scene transition.
+5. **Case scene** (unchanged).
 
-## How to scope the map/drive so it's actually buildable in the time left
+## Build order — do it in this sequence, ship whatever's done when time runs out
 
-Keep this as simple as possible — the *feeling* of driving there matters more than real vehicle physics:
+1. **Street scene + working doors** (hotel ↔ street ↔ cafe). Reuses existing movement/interact code entirely — just new scene art and door triggers. Do this first; it's an upgrade over instant transitions on its own even with nothing else below it.
+2. **Car interactable that triggers a drive sequence** — start with the simplest possible version: the car "drives" via a short auto-animation along a fixed path (3-5 seconds, no player input) straight into the case scene. This alone gives the feeling of "he drove there."
+3. **Only once that's solid:** upgrade the auto-drive into real player-controlled steering on that same fixed short road. This is the polish layer — nice to have, not required for the feature to feel complete.
 
-- **Simplest version (do this first):** the map is a single static image with a road path drawn on it. Clicking/confirming the destination plays a short animation of the car icon sliding along a fixed path (3-5 seconds), then cuts to the scene. This is mechanically just a dressed-up loading screen — no input system, no collision, nothing that can really break.
-- **If there's time left after that works:** upgrade to actual player-controlled top-down driving for that short stretch (simple acceleration/steering, no traffic/obstacles needed) — but only as a polish pass on top of the simple version above, never as a replacement that could leave the game unfinished if it runs long.
-- **One map, reused for every case:** don't build 4 different maps — one city map, 4 marked destinations (Harbor Street Diner, Lantern Lane, Caravanserai Inn, and back to Room 414 for the finale), only the current day's marker active.
-
-## Why this order
-
-Building the simple slide-animation version first means the feature is "done" (ships fine) very quickly, and the real-driving upgrade becomes a nice-to-have on top rather than a blocker. If the upgrade doesn't get finished, nobody notices — the game still flows hotel → cafe → map transition → scene, which already reads as "he drove there."
-
-Don't start this until the current rework (painted art direction + Book/newspaper text) is in a stable, pushed state.
+Don't start any of this until the current rework (painted art direction + Book/newspaper text) is stable and pushed. Push to the repo at each stable step.
