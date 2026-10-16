@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using HollowSaint.Core;
 using HollowSaint.Interaction;
 using HollowSaint.Investigation;
@@ -77,9 +78,11 @@ namespace HollowSaint.EditorTools
 
         static void ConfigureProjectSettings()
         {
-            // Top-down: lower on screen draws in front.
+            // Top-down: lower on screen draws in front. (URP's 2D renderer has its own copy of
+            // this, set in RenderSetup.)
             GraphicsSettings.transparencySortMode = TransparencySortMode.CustomAxis;
             GraphicsSettings.transparencySortAxis = new Vector3(0f, 1f, 0f);
+            RenderSetup.Ensure();
         }
 
         // ================================================================ scenes
@@ -134,6 +137,11 @@ namespace HollowSaint.EditorTools
             SerializedSet.Set(conditional, "showDuring", new List<GameObject> { radioClue, bedClue, ashClue });
             foreach (var go in new[] { radioClue, bedClue, ashClue }) go.SetActive(false);
 
+            // Key light: streetlamp through the venetian blinds, falling down and to the right.
+            AmbientLight();
+            KeyLight("Window", new Vector2(-1f, 3.3f), 205f, 14f, 110f);
+            BlindStripes(new Vector2(1.4f, -0.8f), new Vector2(9f, 6.5f), -20f);
+
             Player(new Vector2(0f, -2f));
             Intro(null, isHotel: true);
             return Save(path);
@@ -163,7 +171,10 @@ namespace HollowSaint.EditorTools
             Clue(rot, c.clues[0], "Examine the stain");
 
             var lamp = Block("FlickeringLamp", new Vector2(4.5f, 3.2f), new Vector2(0.7f, 0.5f), Palette.Amber, 2);
-            lamp.transform.Find("Visual").gameObject.AddComponent<ColorBlink>();
+            var lampBlink = lamp.transform.Find("Visual").gameObject.AddComponent<ColorBlink>();
+            // Key light: the flickering lamp itself, so the whole kitchen stutters with it.
+            AmbientLight(0.45f);
+            SerializedSet.Set(lampBlink, "linkedLight", KeyLight("Lamp", new Vector2(4.5f, 2.9f), 0f, 13f, 360f, 1.5f));
             Clue(lamp, c.clues[1], "Examine the lamp");
 
             var door = Block("PantryDoor", new Vector2(9.35f, -1.2f), new Vector2(0.5f, 2.2f), Palette.CoatShadow, 1);
@@ -230,6 +241,10 @@ namespace HollowSaint.EditorTools
                 new DialogueLine(Speakers.Dutch, "Side-table drawer, under the napkins: a silver spoon. Tarnished. Engraved \"L.A.\""),
             });
 
+            // Key light: the candles on the sideboard.
+            AmbientLight();
+            KeyLight("Candles", new Vector2(5f, 3.2f), 0f, 13f, 360f, 1.8f);
+
             Player(new Vector2(-7f, -3.5f));
             Intro(c, isHotel: false);
             return Save(path);
@@ -278,6 +293,12 @@ namespace HollowSaint.EditorTools
                 new DialogueLine(Speakers.Dutch, "Behind the radiator: a fountain pen. Nib's still wet."),
             });
 
+            // Key light: the street through the window blinds, falling down and to the left.
+            // Same treatment as Dutch's room, on purpose.
+            AmbientLight();
+            KeyLight("Window", new Vector2(5f, 3.6f), 155f, 14f, 110f);
+            BlindStripes(new Vector2(2.4f, -0.8f), new Vector2(9f, 6.5f), 20f);
+
             Player(new Vector2(-2f, -3.8f));
             Intro(c, isHotel: false);
             return Save(path);
@@ -318,9 +339,112 @@ namespace HollowSaint.EditorTools
 
         static string Save(string path)
         {
+            ApplyLightingRules();
             System.IO.Directory.CreateDirectory(SceneDir);
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), path);
             return path;
+        }
+
+        // ================================================================ lighting
+
+        /// <summary>Floor-standing furniture that casts a shadow from the room's key light.</summary>
+        static readonly HashSet<string> ShadowCasters = new HashSet<string>
+        {
+            "Bed", "Nightstand", "Desk", "Counter", "Island", "DiningTable", "Armchair", "WritingDesk",
+        };
+
+        /// <summary>
+        /// Light sources (amber) and supernatural tells (violet) are unlit so they read in the
+        /// dark; everything else is lit by the room's lights. Listed furniture and Dutch cast shadows.
+        /// </summary>
+        static void ApplyLightingRules()
+        {
+            var lit = AssetDatabase.LoadAssetAtPath<Material>(RenderSetup.LitMaterialPath);
+            var unlit = AssetDatabase.LoadAssetAtPath<Material>(RenderSetup.UnlitMaterialPath);
+            foreach (var sr in Object.FindObjectsByType<SpriteRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                bool emissive = SameColor(sr.color, Palette.Amber) || SameColor(sr.color, Palette.Supernatural);
+                sr.sharedMaterial = emissive ? unlit : lit;
+            }
+            foreach (Transform t in propsRoot)
+            {
+                if (!ShadowCasters.Contains(t.name)) continue;
+                var visual = t.Find("Visual");
+                if (visual != null) AddShadowCaster(visual.gameObject);
+            }
+            var player = GameObject.Find("Player");
+            if (player != null) AddShadowCaster(player.transform.Find("Visual").gameObject);
+        }
+
+        static bool SameColor(Color a, Color b)
+        {
+            Color32 x = a, y = b;
+            return x.r == y.r && x.g == y.g && x.b == y.b;
+        }
+
+        static void AddShadowCaster(GameObject go)
+        {
+            var caster = go.GetComponent<ShadowCaster2D>() ?? go.AddComponent<ShadowCaster2D>();
+            caster.castingOption = ShadowCaster2D.ShadowCastingOptions.CastShadow;
+            caster.useRendererSilhouette = true;
+        }
+
+        /// <summary>Dim cool fill so unlit corners stay readable as navy rather than black.</summary>
+        static void AmbientLight(float intensity = 0.5f)
+        {
+            var go = new GameObject("Light_Ambient");
+            var light = go.AddComponent<Light2D>();
+            light.lightType = Light2D.LightType.Global;
+            light.color = new Color(0.55f, 0.6f, 0.9f);
+            light.intensity = intensity;
+        }
+
+        /// <summary>
+        /// The room's single key light: amber, shadow-casting. Points along its local up axis;
+        /// <paramref name="angle"/> is the cone width (360 = all round).
+        /// </summary>
+        static Light2D KeyLight(string name, Vector2 pos, float rotationZ, float radius, float angle, float intensity = 2f)
+        {
+            var go = new GameObject("Light_" + name);
+            go.transform.position = pos;
+            go.transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+            var light = go.AddComponent<Light2D>();
+            light.lightType = Light2D.LightType.Point;
+            light.color = Palette.Amber;
+            light.intensity = intensity;
+            light.pointLightInnerRadius = radius * 0.15f;
+            light.pointLightOuterRadius = radius;
+            // A full-circle light needs inner == outer, or the falloff band leaves a dark wedge.
+            light.pointLightInnerAngle = angle >= 360f ? 360f : Mathf.Max(0f, angle - 40f);
+            light.pointLightOuterAngle = angle;
+            light.falloffIntensity = 0.4f;
+            light.shadowsEnabled = true;
+            light.shadowIntensity = 0.85f;
+            light.shadowSoftness = 0.25f;
+            return light;
+        }
+
+        /// <summary>
+        /// Venetian-blind stripes thrown across the floor: parallel strips of sprite light, hard-edged.
+        /// </summary>
+        static void BlindStripes(Vector2 pos, Vector2 size, float rotationZ, int slats = 7, float intensity = 0.6f)
+        {
+            var root = new GameObject("Light_BlindStripes").transform;
+            root.position = pos;
+            root.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+            float pitch = size.y / slats;
+            for (int i = 0; i < slats; i++)
+            {
+                var go = new GameObject("Slat" + i);
+                go.transform.SetParent(root, false);
+                go.transform.localPosition = new Vector3(0f, -size.y / 2f + pitch * (i + 0.5f), 0f);
+                go.transform.localScale = new Vector3(size.x, pitch * 0.55f, 1f);
+                var light = go.AddComponent<Light2D>();
+                light.lightType = Light2D.LightType.Sprite;
+                light.lightCookieSprite = square;
+                light.color = Palette.Amber;
+                light.intensity = intensity;
+            }
         }
 
         static void Room()

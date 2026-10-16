@@ -16,6 +16,7 @@ namespace HollowSaint.EditorTools
         public const string GlowPath = "Assets/Art/Placeholder/Glow.png";
         public const string DutchPath = "Assets/Art/Characters/Dutch.png";
         public const string DutchSilhouettePath = "Assets/Art/Characters/Dutch_Silhouette.png";
+        public const string BlindsPath = "Assets/Art/Lighting/Blinds.png";
 
         [MenuItem("Hollow Saint/Generate Placeholder Art")]
         public static void GenerateAll()
@@ -37,6 +38,8 @@ namespace HollowSaint.EditorTools
             }, SpriteAlignment.Center);
             Write(DutchPath, 32, 32, DutchPixel, SpriteAlignment.BottomCenter);
             Write(DutchSilhouettePath, 32, 32, (x, y) => DutchPixel(x, y).a > 0f ? Color.white : Color.clear, SpriteAlignment.BottomCenter);
+            // Light cookie: horizontal slats, 5 px lit / 3 px shadow, for venetian-blind stripes.
+            Write(BlindsPath, 64, 64, (x, y) => (y % 8) < 5 ? Color.white : Color.clear, SpriteAlignment.Center);
             AssetDatabase.Refresh();
         }
 

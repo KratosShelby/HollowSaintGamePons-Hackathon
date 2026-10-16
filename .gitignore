@@ -42,3 +42,6 @@ Thumbs.db
 # Editor/IDE files not covered above
 *.slnx
 .vscode/
+# Agent playtest screenshots
+/Assets/Temp/
+/Assets/Temp.meta
