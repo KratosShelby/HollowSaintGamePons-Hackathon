@@ -36,6 +36,8 @@ namespace HollowSaint.Core
         readonly HashSet<ToolData> spentTools = new HashSet<ToolData>();
         readonly HashSet<CaseData> startedCases = new HashSet<CaseData>();
         readonly HashSet<CaseData> bookRevealPlayed = new HashSet<CaseData>();
+        string pendingSpawn;
+        bool hotelWakePending = true;
 
         /// <summary>Every symptom ever logged, across all cases. The Book checks against this.</summary>
         public IReadOnlyList<string> Journal => journal;
@@ -151,8 +153,10 @@ namespace HollowSaint.Core
                 {
                     Say(ActiveCase.arrivalLines);
                 }
-                else
+                else if (hotelWakePending)
                 {
+                    // Waking up (game start, or back from a case): the radio, word for word.
+                    hotelWakePending = false;
                     var lines = new List<DialogueLine> { Config.radioLine };
                     if (Config.radioReactions.Count > 0)
                         lines.Add(new DialogueLine(Speakers.Dutch, Config.radioReactions[Mathf.Min(CasesClosed, Config.radioReactions.Count - 1)]));
@@ -166,11 +170,28 @@ namespace HollowSaint.Core
             NotifyChanged();
         }
 
-        void LoadScene(string sceneName)
+        void LoadScene(string sceneName, string spawnId = null)
         {
+            pendingSpawn = spawnId;
             SetMode(GameMode.Explore);
             UI.CloseAll();
             SceneManager.LoadScene(sceneName);
+        }
+
+        /// <summary>Walk through a door: load the scene and arrive at the named spawn point.</summary>
+        public void GoToScene(string sceneName, string spawnId)
+        {
+            if (Mode != GameMode.Explore || string.IsNullOrEmpty(sceneName)) return;
+            Debug.Log($"[Game] Door -> {sceneName} ({spawnId})");
+            LoadScene(sceneName, spawnId);
+        }
+
+        /// <summary>The spawn point id for the scene that just loaded (null = the scene's default).</summary>
+        public string ConsumePendingSpawn()
+        {
+            var id = pendingSpawn;
+            pendingSpawn = null;
+            return id;
         }
 
         // ---------------------------------------------------------------- newspaper / case lifecycle
@@ -238,6 +259,7 @@ namespace HollowSaint.Core
                 UI.EndCard.Show(Config, CasesClosed, TotalCases);
                 return;
             }
+            hotelWakePending = true;
             Say(Speakers.Dutch, $"Case closed. That's {CasesClosed}.", () => LoadScene(Config.hotelScene));
         }
 

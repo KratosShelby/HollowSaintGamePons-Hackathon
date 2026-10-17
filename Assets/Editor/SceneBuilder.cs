@@ -60,6 +60,8 @@ namespace HollowSaint.EditorTools
             var built = new List<string>
             {
                 BuildHotel(3),
+                BuildStreet(),
+                BuildCafe(),
                 BuildFamished(0),
                 BuildEcho(1),
                 BuildLodger(2),
@@ -100,7 +102,6 @@ namespace HollowSaint.EditorTools
             Decor("CityLight3", new Vector2(0.4f, 4.1f), new Vector2(0.2f, 0.2f), Palette.Amber, -13);
             var lamp = Decor("StandingLamp", new Vector2(-8.8f, 3.2f), new Vector2(0.7f, 0.5f), Palette.Amber, 2);
             Decor("LampPole", new Vector2(-8.8f, 2.5f), new Vector2(0.15f, 1f), Palette.NearBlack, 1);
-            Decor("Door", new Vector2(0f, -5.35f), new Vector2(1.8f, 0.5f), Palette.CoatShadow, -12);
 
             // Bed, nightstand + radio.
             var bed = Bed("Bed", new Vector2(-6.5f, 0.3f));
@@ -108,11 +109,21 @@ namespace HollowSaint.EditorTools
             Decor("Radio", new Vector2(-4.3f, 2.55f), new Vector2(0.75f, 0.45f), Palette.Navy, 3, nightstand.transform);
             Decor("RadioDial", new Vector2(-4.1f, 2.55f), new Vector2(0.15f, 0.15f), Palette.Amber, 4, nightstand.transform);
 
-            // Desk with newspaper and ashtray.
+            // Desk with ashtray. (The newspaper is read at the cafe now.)
             Block("Desk", new Vector2(4f, 2.6f), new Vector2(3.6f, 1.2f), Palette.CoatShadow);
-            var paper = Trigger("Newspaper", new Vector2(3.2f, 2.6f), new Vector2(1.0f, 0.7f), Palette.Cream, 3);
-            Decor("PaperLines", new Vector2(3.2f, 2.7f), new Vector2(0.7f, 0.1f), Palette.NavyLight, 4, paper.transform);
-            AddInteractable<NewspaperInteractable>(paper, "Read the newspaper");
+
+            // The door out to the street. Locked during the final case: Dutch doesn't leave this room.
+            var door = Trigger("HotelDoor", new Vector2(0f, -4.85f), new Vector2(1.8f, 0.6f), Palette.CoatShadow, -11);
+            var doorBehaviour = AddInteractable<DoorInteractable>(door, "Go out to the street");
+            SerializedSet.Set(doorBehaviour, "targetScene", StreetScene);
+            SerializedSet.Set(doorBehaviour, "targetSpawn", "FromHotel");
+            SerializedSet.Set(doorBehaviour, "lockedDuringFinalCase", true);
+            SerializedSet.Set(doorBehaviour, "lockedLines", new List<DialogueLine>
+            {
+                new DialogueLine(Speakers.Dutch, "Door won't open. Locked from the inside."),
+                new DialogueLine(Speakers.Dutch, "I didn't lock it."),
+            });
+            Spawn("FromStreet", new Vector2(0f, -3.9f));
             Decor("Ashtray", new Vector2(5.2f, 2.65f), new Vector2(0.45f, 0.3f), Palette.NavyLight, 3);
             Decor("Butt1", new Vector2(5.1f, 2.7f), new Vector2(0.15f, 0.08f), Palette.Cream, 4);
             Decor("Butt2", new Vector2(5.3f, 2.62f), new Vector2(0.15f, 0.08f), Palette.Cream, 4);
@@ -144,6 +155,113 @@ namespace HollowSaint.EditorTools
 
             Player(new Vector2(0f, -2f));
             Intro(null, isHotel: true);
+            return Save(path);
+        }
+
+        public const string StreetScene = "Street";
+        public const string CafeScene = "Cafe";
+
+        /// <summary>
+        /// The street outside the hotel: twice a screen wide, camera follows. Hotel door on the left,
+        /// cafe door on the right, Dutch's car parked at the kerb between them.
+        /// </summary>
+        static string BuildStreet()
+        {
+            BeginScene("Street  ·  outside Hotel Caspian Rest", out var path, StreetScene);
+            const float halfWidth = 18f;
+
+            // Road, kerb, pavement, building fronts, edges.
+            Decor("Road", new Vector2(0f, -3.0f), new Vector2(halfWidth * 2f, 4.6f), Palette.NearBlack, -20);
+            Decor("RoadLine", new Vector2(0f, -3.2f), new Vector2(halfWidth * 2f, 0.08f), Palette.NavyLight, -19);
+            Decor("Kerb", new Vector2(0f, -0.65f), new Vector2(halfWidth * 2f, 0.15f), Palette.NavyLight, -19);
+            Decor("Pavement", new Vector2(0f, 0.5f), new Vector2(halfWidth * 2f, 2.2f), Palette.Navy, -20);
+            Block("HotelFront", new Vector2(-10f, 3.6f), new Vector2(14f, 4f), Palette.NavyLight, -15);
+            Block("Alley", new Vector2(0f, 3.6f), new Vector2(6f, 4f), Palette.NearBlack, -16);
+            Block("CafeFront", new Vector2(10f, 3.6f), new Vector2(14f, 4f), Palette.CoatShadow, -15);
+            Decor("HotelSign", new Vector2(-10f, 3.0f), new Vector2(3.2f, 0.5f), Palette.Amber, -13);
+            Decor("CafeWindow", new Vector2(12.5f, 2.6f), new Vector2(3f, 1.2f), Palette.Amber, -13);
+            Block("WestEdge", new Vector2(-halfWidth - 0.2f, 0f), new Vector2(0.4f, 11.25f), Palette.NearBlack, -15);
+            Block("EastEdge", new Vector2(halfWidth + 0.2f, 0f), new Vector2(0.4f, 11.25f), Palette.NearBlack, -15);
+            Block("FarKerb", new Vector2(0f, -5.4f), new Vector2(halfWidth * 2f, 0.45f), Palette.NearBlack, -15);
+
+            var hotelDoor = Trigger("HotelDoor", new Vector2(-10f, 1.25f), new Vector2(1.6f, 0.7f), Palette.CoatShadow, -12);
+            var hd = AddInteractable<DoorInteractable>(hotelDoor, "Back up to Room 414");
+            SerializedSet.Set(hd, "targetScene", "Hotel");
+            SerializedSet.Set(hd, "targetSpawn", "FromStreet");
+            Spawn("FromHotel", new Vector2(-10f, 0.3f));
+
+            var cafeDoor = Trigger("CafeDoor", new Vector2(10f, 1.25f), new Vector2(1.6f, 0.7f), Palette.Navy, -12);
+            var cd = AddInteractable<DoorInteractable>(cafeDoor, "Go into the cafe");
+            SerializedSet.Set(cd, "targetScene", CafeScene);
+            SerializedSet.Set(cd, "targetSpawn", "FromStreet");
+            Spawn("FromCafe", new Vector2(10f, 0.3f));
+
+            // Dutch's car, parked at the kerb. (Driving comes later; for now it's a prop that talks.)
+            var car = Block("Car", new Vector2(0f, -1.7f), new Vector2(3.4f, 1.4f), Palette.Navy);
+            Decor("Windscreen", new Vector2(0.6f, -1.6f), new Vector2(0.9f, 1.0f), Palette.NavyLight, 2, car.transform);
+            Decor("Headlight", new Vector2(1.65f, -1.25f), new Vector2(0.15f, 0.25f), Palette.Amber, 2, car.transform);
+            var carTalk = AddInteractable<TalkInteractable>(car, "The car");
+            SerializedSet.Set(carTalk, "lines", new List<DialogueLine>
+            {
+                new DialogueLine(Speakers.Dutch, "Rental. Smells like someone else's cigarettes. Or mine."),
+            });
+
+            // Key light: one streetlamp between the two doors.
+            Decor("LampPost", new Vector2(-3f, 1.0f), new Vector2(0.15f, 1.6f), Palette.NearBlack, 1);
+            Decor("LampHead", new Vector2(-3f, 1.85f), new Vector2(0.5f, 0.3f), Palette.Amber, 2);
+            AmbientLight(0.4f);
+            KeyLight("Streetlamp", new Vector2(-3f, 1.7f), 0f, 16f, 360f, 1.8f);
+
+            var player = Player(new Vector2(-10f, 0.3f));
+            var follow = Camera.main.gameObject.AddComponent<CameraFollow>();
+            SerializedSet.Set(follow, "target", player.transform);
+            SerializedSet.Set(follow, "minX", -halfWidth + 10f);
+            SerializedSet.Set(follow, "maxX", halfWidth - 10f);
+            Intro(null, isHotel: false);
+            return Save(path);
+        }
+
+        /// <summary>The cafe: a drink at the counter, the day's paper on Dutch's usual table.</summary>
+        static string BuildCafe()
+        {
+            BeginScene("Cafe  ·  across the street", out var path, CafeScene);
+            Room();
+
+            Block("Counter", new Vector2(-4f, 2.9f), new Vector2(7f, 1f), Palette.CoatShadow);
+            Decor("CoffeeMachine", new Vector2(-6.2f, 3.05f), new Vector2(0.9f, 0.6f), Palette.NavyLight, 3);
+            var counter = Trigger("OrderSpot", new Vector2(-3.5f, 2.1f), new Vector2(2f, 0.6f), Palette.Navy, -18);
+            var order = AddInteractable<TalkInteractable>(counter, "Order a drink");
+            SerializedSet.Set(order, "lines", new List<DialogueLine>
+            {
+                new DialogueLine(Speakers.Dutch, "Coffee. Black."),
+                new DialogueLine(Speakers.Narration, "The barman pours without looking up. He's never asked what an American is doing in Baku this long."),
+            });
+
+            // Background regulars: silhouettes only.
+            Block("RegularTable", new Vector2(6f, 1.2f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            Decor("Regular1", new Vector2(6f, 2.0f), new Vector2(0.7f, 1.1f), Palette.NearBlack, 4);
+            Block("CornerTable", new Vector2(-6.5f, -2.2f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            Decor("Regular2", new Vector2(-7.4f, -2.0f), new Vector2(0.7f, 1.1f), Palette.NearBlack, 4);
+
+            // Dutch's table, with the day's paper.
+            Block("DutchTable", new Vector2(2f, -1.5f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            var paper = Trigger("Newspaper", new Vector2(2f, -1.5f), new Vector2(1.0f, 0.7f), Palette.Cream, 3);
+            Decor("PaperLines", new Vector2(2f, -1.4f), new Vector2(0.7f, 0.1f), Palette.NavyLight, 4, paper.transform);
+            AddInteractable<NewspaperInteractable>(paper, "Read the newspaper");
+
+            var door = Trigger("CafeDoor", new Vector2(0f, -4.85f), new Vector2(1.8f, 0.6f), Palette.CoatShadow, -11);
+            var d = AddInteractable<DoorInteractable>(door, "Back out to the street");
+            SerializedSet.Set(d, "targetScene", StreetScene);
+            SerializedSet.Set(d, "targetSpawn", "FromCafe");
+            Spawn("FromStreet", new Vector2(0f, -3.9f));
+
+            // Key light: one bare bulb hanging over the middle of the room.
+            Decor("Bulb", new Vector2(1f, 0.6f), new Vector2(0.3f, 0.3f), Palette.Amber, 9);
+            AmbientLight(0.4f);
+            KeyLight("Bulb", new Vector2(1f, 0.6f), 0f, 11f, 360f, 1.8f);
+
+            Player(new Vector2(0f, -3.9f));
+            Intro(null, isHotel: false);
             return Save(path);
         }
 
@@ -351,6 +469,7 @@ namespace HollowSaint.EditorTools
         static readonly HashSet<string> ShadowCasters = new HashSet<string>
         {
             "Bed", "Nightstand", "Desk", "Counter", "Island", "DiningTable", "Armchair", "WritingDesk",
+            "Car", "RegularTable", "CornerTable", "DutchTable",
         };
 
         /// <summary>
@@ -577,9 +696,17 @@ namespace HollowSaint.EditorTools
             SerializedSet.Set(c, "glow", glowGo);
         }
 
-        static void Player(Vector2 spawn)
+        static void Spawn(string id, Vector2 pos)
+        {
+            var go = new GameObject("Spawn_" + id);
+            go.transform.position = pos;
+            SerializedSet.Set(go.AddComponent<SpawnPoint>(), "id", id);
+        }
+
+        static GameObject Player(Vector2 spawn)
         {
             var go = new GameObject("Player");
+            go.tag = "Player";
             go.transform.position = spawn;
             go.AddComponent<Rigidbody2D>();
             var col = go.AddComponent<BoxCollider2D>();
@@ -589,6 +716,7 @@ namespace HollowSaint.EditorTools
             var controller = go.AddComponent<PlayerController>();
             SerializedSet.Set(controller, "visual", visual);
             go.AddComponent<PlayerInteractor>();
+            return go;
         }
 
         static void Intro(CaseData c, bool isHotel)
