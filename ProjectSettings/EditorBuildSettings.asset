@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Hotel.unity
     guid: f0d8afd27a9ee5d45aa22f4822173b8e
   - enabled: 1
+    path: Assets/Scenes/Street.unity
+    guid: 7a5436d587484bb4e8af57a928fb374d
+  - enabled: 1
+    path: Assets/Scenes/Cafe.unity
+    guid: ecdcaf27a6807fd43872af7488faa260
+  - enabled: 1
     path: Assets/Scenes/Case_Famished.unity
     guid: f3e25bab6b69f58438c7238468f1ec7f
   - enabled: 1

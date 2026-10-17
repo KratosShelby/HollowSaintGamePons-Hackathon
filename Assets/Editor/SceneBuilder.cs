@@ -106,11 +106,14 @@ namespace HollowSaint.EditorTools
             // Bed, nightstand + radio.
             var bed = Bed("Bed", new Vector2(-6.5f, 0.3f));
             var nightstand = Block("Nightstand", new Vector2(-4.3f, 2.4f), new Vector2(1f, 1f), Palette.CoatShadow);
-            Decor("Radio", new Vector2(-4.3f, 2.55f), new Vector2(0.75f, 0.45f), Palette.Navy, 3, nightstand.transform);
-            Decor("RadioDial", new Vector2(-4.1f, 2.55f), new Vector2(0.15f, 0.15f), Palette.Amber, 4, nightstand.transform);
+            Dress(nightstand, "nightstand");
+            var radio = Decor("Radio", new Vector2(-4.3f, 2.55f), new Vector2(0.75f, 0.45f), Palette.Navy, 3, nightstand.transform);
+            var dial = Decor("RadioDial", new Vector2(-4.1f, 2.55f), new Vector2(0.15f, 0.15f), Palette.Amber, 4, nightstand.transform);
+            // The painted radio sits in the nightstand's glow slot, and has its own dial.
+            if (Dress(radio, "radio", width: 0.75f, offset: new Vector2(0f, 0.3f))) Object.DestroyImmediate(dial);
 
             // Desk with ashtray. (The newspaper is read at the cafe now.)
-            Block("Desk", new Vector2(4f, 2.6f), new Vector2(3.6f, 1.2f), Palette.CoatShadow);
+            Dress(Block("Desk", new Vector2(4f, 2.6f), new Vector2(3.6f, 1.2f), Palette.CoatShadow), "desk");
 
             // The door out to the street. Locked during the final case: Dutch doesn't leave this room.
             var door = Trigger("HotelDoor", new Vector2(0f, -4.85f), new Vector2(1.8f, 0.6f), Palette.CoatShadow, -11);
@@ -131,9 +134,14 @@ namespace HollowSaint.EditorTools
             // Mirror on the right wall.
             var mirror = Block("Mirror", new Vector2(9.35f, -0.5f), new Vector2(0.5f, 2f), Palette.CoatShadow, 1);
             Decor("Glass", new Vector2(9.35f, -0.5f), new Vector2(0.3f, 1.7f), Palette.NavyLight, 2, mirror.transform);
-            var reflection = SpriteChild("Reflection", dutchSilhouette, new Vector2(9.35f, -1.35f), 0.85f, 3, mirror.transform);
+            // The painted mirror is an oval hung flat on the wall, wider than the placeholder's edge-on
+            // strip, so it hangs left of the collider and the reflection is scaled to its glass.
+            bool paintedMirror = Dress(mirror, "mirror", new[] { "Glass" }, width: 1.4f, offset: new Vector2(-0.45f, 0.1f));
+            var reflection = paintedMirror
+                ? SpriteChild("Reflection", dutchSilhouette, new Vector2(8.9f, -1.05f), 0.6f, 3, mirror.transform)
+                : SpriteChild("Reflection", dutchSilhouette, new Vector2(9.35f, -1.35f), 0.85f, 3, mirror.transform);
             reflection.gameObject.SetActive(false);
-            var mirrorTell = Glow("Tell", new Vector2(9.35f, 0.65f), mirror.transform);
+            var mirrorTell = Glow("Tell", paintedMirror ? new Vector2(8.9f, 0.75f) : new Vector2(9.35f, 0.65f), mirror.transform);
             var mirrorBehaviour = AddInteractable<MirrorInteractable>(mirror, "Mirror");
             SerializedSet.Set(mirrorBehaviour, "reflection", reflection);
             SerializedSet.Set(mirrorBehaviour, "tell", mirrorTell);
@@ -238,13 +246,13 @@ namespace HollowSaint.EditorTools
             });
 
             // Background regulars: silhouettes only.
-            Block("RegularTable", new Vector2(6f, 1.2f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            Dress(Block("RegularTable", new Vector2(6f, 1.2f), new Vector2(1.6f, 1f), Palette.CoatShadow), "table");
             Decor("Regular1", new Vector2(6f, 2.0f), new Vector2(0.7f, 1.1f), Palette.NearBlack, 4);
-            Block("CornerTable", new Vector2(-6.5f, -2.2f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            Dress(Block("CornerTable", new Vector2(-6.5f, -2.2f), new Vector2(1.6f, 1f), Palette.CoatShadow), "table");
             Decor("Regular2", new Vector2(-7.4f, -2.0f), new Vector2(0.7f, 1.1f), Palette.NearBlack, 4);
 
             // Dutch's table, with the day's paper.
-            Block("DutchTable", new Vector2(2f, -1.5f), new Vector2(1.6f, 1f), Palette.CoatShadow);
+            Dress(Block("DutchTable", new Vector2(2f, -1.5f), new Vector2(1.6f, 1f), Palette.CoatShadow), "table");
             var paper = Trigger("Newspaper", new Vector2(2f, -1.5f), new Vector2(1.0f, 0.7f), Palette.Cream, 3);
             Decor("PaperLines", new Vector2(2f, -1.4f), new Vector2(0.7f, 0.1f), Palette.NavyLight, 4, paper.transform);
             AddInteractable<NewspaperInteractable>(paper, "Read the newspaper");
@@ -286,10 +294,17 @@ namespace HollowSaint.EditorTools
             });
 
             var rot = Trigger("RotPatch", new Vector2(-4f, -2.2f), new Vector2(2.4f, 1.4f), Palette.NearBlack, -9);
+            Dress(rot, "clue_floor_stain");
             Clue(rot, c.clues[0], "Examine the stain");
 
             var lamp = Block("FlickeringLamp", new Vector2(4.5f, 3.2f), new Vector2(0.7f, 0.5f), Palette.Amber, 2);
             var lampBlink = lamp.transform.Find("Visual").gameObject.AddComponent<ColorBlink>();
+            // Painted, it dims rather than switching colour, so the art keeps its own amber dial.
+            if (Dress(lamp, "clue_flicker_radio", width: 0.9f))
+            {
+                SerializedSet.Set(lampBlink, "onColor", Color.white);
+                SerializedSet.Set(lampBlink, "offColor", new Color(0.4f, 0.4f, 0.45f));
+            }
             // Key light: the flickering lamp itself, so the whole kitchen stutters with it.
             AmbientLight(0.45f);
             SerializedSet.Set(lampBlink, "linkedLight", KeyLight("Lamp", new Vector2(4.5f, 2.9f), 0f, 13f, 360f, 1.5f));
@@ -297,6 +312,8 @@ namespace HollowSaint.EditorTools
 
             var door = Block("PantryDoor", new Vector2(9.35f, -1.2f), new Vector2(0.5f, 2.2f), Palette.CoatShadow, 1);
             ClawMarks(door.transform, new Vector2(9.35f, -1.1f));
+            // Drawn face-on like the hotel mirror: hangs left of the edge-on collider.
+            Dress(door, "clue_door_claws", new[] { "ClawMark0", "ClawMark1", "ClawMark2" }, width: 1.1f, offset: new Vector2(-0.3f, 0f));
             Clue(door, c.clues[2], "Examine the pantry door");
 
             var threshold = Trigger("PantryThreshold", new Vector2(8.3f, -1.2f), new Vector2(0.9f, 1.4f), Palette.NearBlack, -8);
@@ -322,8 +339,8 @@ namespace HollowSaint.EditorTools
             var table = Block("DiningTable", new Vector2(0f, 0f), new Vector2(4f, 1.6f), Palette.CoatShadow);
             Decor("Cloth", new Vector2(0f, 0.05f), new Vector2(3.4f, 1.2f), Palette.Cream, 2, table.transform);
             Decor("SilverCase", new Vector2(0f, 0.1f), new Vector2(1.2f, 0.45f), Palette.NavyLight, 3, table.transform);
-            Decor("ChairLeft", new Vector2(-2.5f, 0f), new Vector2(0.7f, 0.7f), Palette.CoatLit, 1);
-            Decor("ChairRight", new Vector2(2.5f, 0f), new Vector2(0.7f, 0.7f), Palette.CoatLit, 1);
+            Dress(Decor("ChairLeft", new Vector2(-2.5f, 0f), new Vector2(0.7f, 0.7f), Palette.CoatLit, 1), "chair", width: 1f);
+            Dress(Decor("ChairRight", new Vector2(2.5f, 0f), new Vector2(0.7f, 0.7f), Palette.CoatLit, 1), "chair", width: 1f);
             var tell = SpriteChild("Tell", glow, new Vector2(0f, 1.3f), 1.5f, 8, table.transform);
             tell.color = Palette.Supernatural;
             tell.gameObject.AddComponent<ColorBlink>();
@@ -343,6 +360,7 @@ namespace HollowSaint.EditorTools
             var sideboard = Block("Sideboard", new Vector2(5f, 3.0f), new Vector2(3f, 0.9f), Palette.CoatShadow);
             Decor("Candle1", new Vector2(4.3f, 3.15f), new Vector2(0.18f, 0.5f), Palette.Amber, 3, sideboard.transform);
             Decor("Candle2", new Vector2(5.8f, 3.15f), new Vector2(0.18f, 0.5f), Palette.Amber, 3, sideboard.transform);
+            Dress(sideboard, "sideboard", new[] { "Candle1", "Candle2" });
             Clue(sideboard, c.clues[1], "Examine the sideboard");
 
             var hallMirror = Block("HallMirror", new Vector2(-4f, 3.25f), new Vector2(1f, 0.8f), Palette.CoatShadow, 1);
@@ -378,6 +396,7 @@ namespace HollowSaint.EditorTools
             Clue(bed, c.clues[2], "Look at the bed");
             var nightstand = Block("Nightstand", new Vector2(-4.3f, 2.4f), new Vector2(1f, 1f), Palette.CoatShadow);
             Decor("Lamp", new Vector2(-4.3f, 2.6f), new Vector2(0.4f, 0.4f), Palette.Amber, 3, nightstand.transform);
+            Dress(nightstand, "nightstand", new[] { "Lamp" });
 
             var clock = Block("WallClock", new Vector2(0f, 3.25f), new Vector2(0.8f, 0.8f), Palette.Cream, 1);
             Decor("Hand", new Vector2(0.1f, 3.2f), new Vector2(0.3f, 0.08f), Palette.NearBlack, 2, clock.transform);
@@ -391,6 +410,7 @@ namespace HollowSaint.EditorTools
             Clue(sill, c.clues[1], "Examine the windowsill");
 
             var desk = Block("WritingDesk", new Vector2(3f, -2.6f), new Vector2(2.4f, 1f), Palette.CoatShadow);
+            Dress(desk, "desk");
             Decor("Register", new Vector2(3f, -2.55f), new Vector2(1f, 0.6f), Palette.Cream, 3, desk.transform);
             var tell = Glow("Tell", new Vector2(3f, -2.2f), desk.transform);
             var confront = AddInteractable<ConfrontTarget>(desk, "Guest register");
@@ -581,7 +601,39 @@ namespace HollowSaint.EditorTools
             var bed = Block(name, pos, new Vector2(3f, 4f), Palette.CoatShadow);
             Decor("Blanket", pos + new Vector2(0f, -0.4f), new Vector2(2.6f, 2.9f), Palette.NavyLight, 2, bed.transform);
             Decor("Pillow", pos + new Vector2(0f, 1.45f), new Vector2(2.2f, 0.6f), Palette.Cream, 2, bed.transform);
+            Dress(bed, "bed", new[] { "Blanket", "Pillow" });
             return bed;
+        }
+
+        const string PropArtDir = "Assets/Art/Props/";
+
+        /// <summary>
+        /// Swaps a prop's placeholder square for its painted sprite from Art/Props, if that file
+        /// exists: scaled to <paramref name="width"/> (default: the placeholder's width), moved by
+        /// <paramref name="offset"/>, with the placeholder decor the art already draws removed.
+        /// Colliders are untouched. Returns false, leaving the placeholder as it was, when there's no art.
+        /// </summary>
+        static bool Dress(GameObject prop, string art, string[] replaces = null, float width = 0f, Vector2 offset = default)
+        {
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(PropArtDir + art + ".png");
+            if (sprite == null) return false;
+            var visual = prop.transform.Find("Visual");
+            if (visual == null) visual = prop.transform; // Decor: the sprite is on the object itself.
+            // The placeholder square is 1 unit, so its scale is its width.
+            if (width <= 0f) width = visual.localScale.x;
+            float scale = width / sprite.bounds.size.x;
+            var sr = visual.GetComponent<SpriteRenderer>();
+            sr.sprite = sprite;
+            sr.color = Color.white;
+            visual.localScale = new Vector3(scale, scale, 1f);
+            visual.position = (Vector2)visual.position + offset;
+            if (replaces != null)
+                foreach (var name in replaces)
+                {
+                    var t = prop.transform.Find(name);
+                    if (t != null) Object.DestroyImmediate(t.gameObject);
+                }
+            return true;
         }
 
         static void ClawMarks(Transform parent, Vector2 center)
