@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="384" viewBox="0 0 256 384">
+  <defs>
+    <linearGradient id="coatLight" x1="0%" y1="0%" x2="100%" y2="20%">
+      <stop offset="0%" stop-color="#c97d3f"/>
+      <stop offset="35%" stop-color="#7a4a2b"/>
+      <stop offset="75%" stop-color="#1b1b2f"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </linearGradient>
+    <linearGradient id="hatLight" x1="0%" y1="0%" x2="100%" y2="60%">
+      <stop offset="0%" stop-color="#2e2e52"/>
+      <stop offset="60%" stop-color="#1b1b2f"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </linearGradient>
+    <radialGradient id="faceShadow" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#1b1b2f"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ground contact shadow -->
+  <ellipse cx="128" cy="368" rx="64" ry="12" fill="#0d0d1a" opacity="0.45"/>
+
+  <!-- legs -->
+  <path d="M 96 268 L 92 350 Q 92 360 102 360 L 112 360 L 116 272 Z" fill="#1b1b2f" stroke="#0d0d1a" stroke-width="3"/>
+  <path d="M 160 268 L 164 350 Q 164 360 154 360 L 144 360 L 140 272 Z" fill="#0d0d1a" stroke="#0d0d1a" stroke-width="3"/>
+
+  <!-- shoes -->
+  <ellipse cx="100" cy="362" rx="16" ry="7" fill="#0d0d1a"/>
+  <ellipse cx="156" cy="362" rx="16" ry="7" fill="#0d0d1a"/>
+
+  <!-- coat body: broad shoulders tapering out again at the hem -->
+  <path d="M 82 140
+           Q 70 150 66 180
+           L 56 260
+           Q 54 272 66 274
+           L 190 274
+           Q 202 272 200 260
+           L 190 180
+           Q 186 150 174 140
+           Q 150 128 128 128
+           Q 106 128 82 140 Z"
+        fill="url(#coatLight)" stroke="#0d0d1a" stroke-width="5"/>
+
+  <!-- coat front-opening seam -->
+  <path d="M 128 134 L 122 272" stroke="#0d0d1a" stroke-width="3" opacity="0.55" fill="none"/>
+
+  <!-- lapels -->
+  <path d="M 110 138 L 96 170 L 118 160 Z" fill="#0d0d1a" opacity="0.5"/>
+  <path d="M 146 138 L 160 170 L 138 160 Z" fill="#0d0d1a" opacity="0.5"/>
+
+  <!-- amber rim-light along the lit shoulder/arm edge -->
+  <path d="M 82 142 Q 70 152 66 182 L 60 230" stroke="#f2a65a" stroke-width="4" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+  <!-- sleeves/arms, hands tucked, no detail -->
+  <path d="M 70 152 Q 52 170 50 220 Q 50 236 62 238 L 70 236 Q 64 200 78 158 Z" fill="#1b1b2f" stroke="#0d0d1a" stroke-width="4"/>
+  <path d="M 186 152 Q 204 170 206 220 Q 206 236 194 238 L 186 236 Q 192 200 178 158 Z" fill="#0d0d1a" stroke="#0d0d1a" stroke-width="4"/>
+
+  <!-- neck/collar shadow -->
+  <rect x="112" y="118" width="32" height="24" rx="6" fill="#0d0d1a"/>
+
+  <!-- head, fully shadowed, no facial features -->
+  <ellipse cx="128" cy="100" rx="30" ry="34" fill="url(#faceShadow)"/>
+
+  <!-- hat brim -->
+  <ellipse cx="128" cy="86" rx="62" ry="16" fill="url(#hatLight)" stroke="#0d0d1a" stroke-width="4"/>
+  <!-- hat crown -->
+  <path d="M 100 86 Q 98 50 128 46 Q 158 50 156 86 Z" fill="url(#hatLight)" stroke="#0d0d1a" stroke-width="4"/>
+  <!-- hat band -->
+  <rect x="100" y="76" width="56" height="8" rx="3" fill="#f2a65a" opacity="0.4"/>
+  <!-- crown dent highlight -->
+  <path d="M 128 48 L 128 84" stroke="#0d0d1a" stroke-width="2" opacity="0.4"/>
+</svg>
