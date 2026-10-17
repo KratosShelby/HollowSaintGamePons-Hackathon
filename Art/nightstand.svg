@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="200" viewBox="0 0 160 200">
+  <defs>
+    <linearGradient id="standLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7a4a2b"/>
+      <stop offset="60%" stop-color="#4a2f1c"/>
+      <stop offset="100%" stop-color="#0d0d1a"/>
+    </linearGradient>
+    <radialGradient id="lampGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f2a65a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f2a65a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ground contact shadow -->
+  <ellipse cx="80" cy="180" rx="56" ry="12" fill="#0d0d1a" opacity="0.45"/>
+
+  <!-- lamp glow (sits on top, radio could swap in same slot) -->
+  <circle cx="80" cy="46" r="34" fill="url(#lampGlow)"/>
+  <rect x="64" y="40" width="32" height="24" rx="4" fill="#f4e9d8" stroke="#0d0d1a" stroke-width="3"/>
+
+  <!-- cabinet body -->
+  <rect x="24" y="72" width="112" height="96" rx="8" fill="url(#standLight)" stroke="#0d0d1a" stroke-width="5"/>
+
+  <!-- drawer lines (form definition) -->
+  <rect x="36" y="86" width="88" height="34" rx="4" fill="none" stroke="#0d0d1a" stroke-width="3" opacity="0.6"/>
+  <circle cx="80" cy="103" r="4" fill="#0d0d1a"/>
+  <rect x="36" y="128" width="88" height="34" rx="4" fill="none" stroke="#0d0d1a" stroke-width="3" opacity="0.6"/>
+  <circle cx="80" cy="145" r="4" fill="#0d0d1a"/>
+
+  <!-- legs -->
+  <rect x="30" y="166" width="10" height="20" fill="#0d0d1a"/>
+  <rect x="120" y="166" width="10" height="20" fill="#0d0d1a"/>
+</svg>
